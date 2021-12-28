@@ -4,6 +4,7 @@ import sys
 
 pygame.init()
 FPS = 60
+FPS_WINDOW = 8
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 SIZE = X, Y = screen.get_size()
 all_sprites = pygame.sprite.Group()
@@ -71,7 +72,7 @@ def start_window():
             screen.blit(string_rendered, intro_rect)
         score_fon += 1
         pygame.display.flip()
-        clock.tick(8)
+        clock.tick(FPS_WINDOW)
 
 
 start_window()
