@@ -9,7 +9,6 @@ screen = pygame.display.set_mode((45 * 30, 45 * 17 + 40), pygame.NOFRAME)
 SIZE = WIDTH, HEIGHT = screen.get_size()
 FPS = 50
 FPS_WINDOW = 8
-score = 0
 X, Y = screen.get_size()
 tiles = {'$': 'floor_1.png', '@': "floor_8.png", '^': 'floor_2.png', '*': 'floor_7.png',
          '(': 'floor_4.png', '№': 'floor_3.png', ')': 'floor_5.png', '+': 'floor_6.png',
@@ -523,8 +522,8 @@ class Boss(pygame.sprite.Sprite):
 
 def ending():
     intro_text = ["GAME OVER", "",
-                  f"У вас {score} очков",
-                  "Для продолжения нажмите любую клавишу"]
+                  f"У вас {player.hp * 1.9} очков",
+                  "Для завершения нажмите пробел"]
     score_fon = 0
     font1 = pygame.font.Font('fonts/F77 Minecraft.ttf', 90)  # должен быть предустановлен шрифт
     font2 = pygame.font.Font('fonts/F77 Minecraft.ttf', 50)  # должен быть предустановлен шрифт
@@ -533,9 +532,7 @@ def ending():
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
-                    return  # продолжить
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                pass
+                    terminate()
         screen.blit(pygame.transform.scale(load_image(f'start{score_fon % 3}.png'),
                                            (X, Y)), (0, 0))
         for line in intro_text:
@@ -555,7 +552,7 @@ def ending():
                 intro_rect.top = text_coord
                 intro_rect.x = X // 2 - x_t // 2
                 text_coord += intro_rect.height
-            elif 'клавишу' in line:
+            elif 'пробел' in line:
                 string_rendered = font2.render(line, True, pygame.Color('white'))
                 x_t, y_t = string_rendered.get_size()
                 intro_rect = string_rendered.get_rect()
@@ -681,9 +678,9 @@ level_3 = False
 start_window()
 while running:
     num = player.hp
-    if float(num) < 0.0:
+    if float(num) <= 0.0:
         running = False
-        terminate()
+        ending()
     x, y = 40, 0
     for _ in range(5):
         if num - 1 >= 0:
