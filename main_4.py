@@ -8,6 +8,9 @@ pygame.init()
 screen = pygame.display.set_mode((45 * 30, 45 * 17 + 40), pygame.NOFRAME)
 SIZE = WIDTH, HEIGHT = screen.get_size()
 FPS = 50
+FPS_WINDOW = 8
+score = 0
+X, Y = screen.get_size()
 tiles = {'$': 'floor_1.png', '@': "floor_8.png", '^': 'floor_2.png', '*': 'floor_7.png',
          '(': 'floor_4.png', '№': 'floor_3.png', ')': 'floor_5.png', '+': 'floor_6.png',
          '>': 'floor_ladder.png', '<': 'hole.png', "#": 'wall_hole_1.png', "!": "wall_mid.png",
@@ -518,6 +521,100 @@ class Boss(pygame.sprite.Sprite):
             self.attack_num += 1
 
 
+def ending():
+    intro_text = ["GAME OVER", "",
+                  f"У вас {score} очков",
+                  "Для продолжения нажмите любую клавишу"]
+    score_fon = 0
+    font1 = pygame.font.Font('fonts/F77 Minecraft.ttf', 90)  # должен быть предустановлен шрифт
+    font2 = pygame.font.Font('fonts/F77 Minecraft.ttf', 50)  # должен быть предустановлен шрифт
+    while True:
+        text_coord = 50
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    return  # продолжить
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                pass
+        screen.blit(pygame.transform.scale(load_image(f'start{score_fon % 3}.png'),
+                                           (X, Y)), (0, 0))
+        for line in intro_text:
+            if 'GAME OVER' == line:
+                string_rendered = font1.render(line, True, pygame.Color('white'))
+                x_t, y_t = string_rendered.get_size()
+                intro_rect = string_rendered.get_rect()
+                text_coord = 50
+                intro_rect.top = text_coord
+                intro_rect.x = X // 2 - x_t // 2
+                text_coord += intro_rect.height
+            elif 'У вас' in line:
+                string_rendered = font2.render(line, True, pygame.Color('white'))
+                x_t, y_t = string_rendered.get_size()
+                intro_rect = string_rendered.get_rect()
+                text_coord += 50
+                intro_rect.top = text_coord
+                intro_rect.x = X // 2 - x_t // 2
+                text_coord += intro_rect.height
+            elif 'клавишу' in line:
+                string_rendered = font2.render(line, True, pygame.Color('white'))
+                x_t, y_t = string_rendered.get_size()
+                intro_rect = string_rendered.get_rect()
+                text_coord += 100
+                intro_rect.top = text_coord
+                intro_rect.x = X // 2 - x_t // 2
+                text_coord += intro_rect.height
+            screen.blit(string_rendered, intro_rect)
+        score_fon += 1
+        pygame.display.flip()
+        clock.tick(FPS_WINDOW)
+
+
+def start_window():
+    intro_text = ["DUNGEON", "",
+                  "Соревнуйся, сражайся, побеждай",
+                  "Нажмите ПРОБЕЛ чтобы начать игру"]
+    score_fon = 0
+    font1 = pygame.font.Font('fonts/F77 Minecraft.ttf', 90)  # должен быть предустановлен шрифт
+    font2 = pygame.font.Font('fonts/F77 Minecraft.ttf', 50)  # должен быть предустановлен шрифт
+    while True:
+        text_coord = 50
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    return
+                elif event.key == pygame.K_SPACE:
+                    return  # начать игру
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                pass
+        screen.blit(pygame.transform.scale(load_image(f'start{score_fon % 3}.png'),
+                                           (X, Y)), (0, 0))
+        for line in intro_text:
+            if 'DUNGEON' == line:
+                string_rendered = font1.render(line, True, pygame.Color('white'))
+                x_t, y_t = string_rendered.get_size()
+                intro_rect = string_rendered.get_rect()
+                text_coord = 50
+                intro_rect.top = text_coord
+            elif 'Соревнуйся' in line:
+                string_rendered = font2.render(line, True, pygame.Color('white'))
+                x_t, y_t = string_rendered.get_size()
+                intro_rect = string_rendered.get_rect()
+                text_coord += 50
+                intro_rect.top = text_coord
+            elif 'ПРОБЕЛ' in line:
+                string_rendered = font2.render(line, True, pygame.Color('white'))
+                x_t, y_t = string_rendered.get_size()
+                intro_rect = string_rendered.get_rect()
+                text_coord += 100
+                intro_rect.top = text_coord
+            intro_rect.x = X // 2 - x_t // 2
+            text_coord += intro_rect.height
+            screen.blit(string_rendered, intro_rect)
+        score_fon += 1
+        pygame.display.flip()
+        clock.tick(FPS_WINDOW)
+
+
 def generate_level(level):
     x, y, player = None, None, None
     for i in range(len(level)):
@@ -540,10 +637,6 @@ def generate_level(level):
                 RedFountain(ii, i)
             elif level[i][ii] in list(decor):
                 Decor(level[i][ii], ii, i)
-
-
-def ending():
-    terminate()
 
 
 def terminate():
@@ -585,6 +678,7 @@ flag_gun = True
 level_1 = True
 level_2 = False
 level_3 = False
+start_window()
 while running:
     num = player.hp
     if float(num) < 0.0:
