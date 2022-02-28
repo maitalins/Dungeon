@@ -56,9 +56,9 @@ def load_level(filename):
 class Flour(pygame.sprite.Sprite):
     def __init__(self, type, x, y):
         if type in "!#|%\\":
-            super().__init__(wall_sprites, all_sprites)
+            super().__init__(base.wall_sprites, base.all_sprites)
         else:
-            super().__init__(tile_sprites, all_sprites)
+            super().__init__(base.tile_sprites, base.all_sprites)
         self.type = type
         self.image = pygame.transform.scale(load_image(tiles[type]), (50, 50))
         self.rect = self.image.get_rect().move(x * tile_width, y * tile_height + 30)
@@ -67,11 +67,11 @@ class Flour(pygame.sprite.Sprite):
 class Decor(pygame.sprite.Sprite):
     def __init__(self, type, x, y):
         if type in "L":
-            super(Decor, self).__init__(all_sprites, column_sprites)
+            super(Decor, self).__init__(base.all_sprites, base.column_sprites)
         elif type in "H":
-            super(Decor, self).__init__(all_sprites, column_up_sprites)
+            super(Decor, self).__init__(base.all_sprites, base.column_up_sprites)
         else:
-            super(Decor, self).__init__(all_sprites, decor_sprites)
+            super(Decor, self).__init__(base.all_sprites, base.decor_sprites)
         self.type = type
         self.image = pygame.transform.scale(load_image(decor[type]), (50, 50))
         self.rect = self.image.get_rect().move(x * tile_width, y * tile_height + 30)
@@ -80,7 +80,7 @@ class Decor(pygame.sprite.Sprite):
 
 class Door(pygame.sprite.Sprite):
     def __init__(self, type, x, y):
-        super(Door, self).__init__(all_sprites, door_sprites)
+        super(Door, self).__init__(base.all_sprites, base.door_sprites)
         self.image = pygame.transform.scale(load_image(decor[type]), (100, 100))
         self.rect = self.image.get_rect().move(x * tile_width, y * tile_height + 30)
         self.mask = pygame.mask.from_surface(self.image)
@@ -98,7 +98,7 @@ class Door(pygame.sprite.Sprite):
 
 class BlueFountain(pygame.sprite.Sprite):
     def __init__(self, x, y):
-        super(BlueFountain, self).__init__(all_sprites, blue_fountain)
+        super(BlueFountain, self).__init__(base.all_sprites, base.blue_fountain)
         self.list_image = ["wall_fountain_mid_blue_anim_f0.png", "wall_fountain_mid_blue_anim_f1.png",
                            "wall_fountain_mid_blue_anim_f2.png"]
         self.number = 0
@@ -123,7 +123,7 @@ class BlueFountain(pygame.sprite.Sprite):
 
 class BlueFountainFloor(pygame.sprite.Sprite):
     def __init__(self, x, y):
-        super(BlueFountainFloor, self).__init__(all_sprites, blue_fountain_floor, tile_sprites)
+        super(BlueFountainFloor, self).__init__(base.all_sprites, base.blue_fountain_floor, base.tile_sprites)
         self.list_image = ["wall_fountain_basin_blue_anim_f0.png", "wall_fountain_basin_blue_anim_f1.png",
                            "wall_fountain_basin_blue_anim_f2.png"]
         self.number = 0
@@ -138,7 +138,7 @@ class BlueFountainFloor(pygame.sprite.Sprite):
 
 class RedFountain(pygame.sprite.Sprite):
     def __init__(self, x, y):
-        super(RedFountain, self).__init__(all_sprites, red_fountain)
+        super(RedFountain, self).__init__(base.all_sprites, base.red_fountain)
         self.list_image = ["wall_fountain_mid_red_anim_f0.png", "wall_fountain_mid_red_anim_f1.png",
                            "wall_fountain_mid_red_anim_f2.png"]
         self.number = 0
@@ -164,7 +164,7 @@ class RedFountain(pygame.sprite.Sprite):
 
 class RedFountainFloor(pygame.sprite.Sprite):
     def __init__(self, x, y):
-        super(RedFountainFloor, self).__init__(all_sprites, red_fountain_floor, tile_sprites)
+        super(RedFountainFloor, self).__init__(base.all_sprites, base.red_fountain_floor, base.tile_sprites)
         self.list_image = ["wall_fountain_basin_red_anim_f0.png", "wall_fountain_basin_red_anim_f1.png",
                            "wall_fountain_basin_red_anim_f2.png"]
         self.number = 0
@@ -179,7 +179,7 @@ class RedFountainFloor(pygame.sprite.Sprite):
 
 class Chest(pygame.sprite.Sprite):
     def __init__(self, x, y):
-        super(Chest, self).__init__(all_sprites, chest_sprites)
+        super(Chest, self).__init__(base.all_sprites, base.chest_sprites)
         self.image = pygame.transform.scale(load_image("chest_empty_open_anim_f0.png"), (50, 50))
         self.rect = self.image.get_rect().move(x * tile_width, y * tile_height + 30)
         self.mask = pygame.mask.from_surface(self.image)
@@ -211,7 +211,7 @@ class Player(pygame.sprite.Sprite):
     left_player = "knight_f_idle_anim_f3.png"
 
     def __init__(self, x=None, y=None):
-        super(Player, self).__init__(player_sprites)
+        super(Player, self).__init__(base.player_sprites)
         self.image = pygame.transform.scale(load_image(Player.player), (50, 100))
         if x is None and y is None:
             self.rect = self.image.get_rect().move(10 * tile_width, 11 * tile_height + 30)
@@ -232,25 +232,25 @@ class Player(pygame.sprite.Sprite):
         self.rect.y += y
         run = True
         while run:
-            for nps in nps_sprites:
+            for nps in base.nps_sprites:
                 nps.player = False
-            for event in boss_sprites:
+            for event in base.boss_sprites:
                 if pygame.sprite.collide_mask(self, event):
                     self.hp -= 0.5
                     self.rect.x -= x
                     self.rect.y -= y
-            for event in wall_sprites:
+            for event in base.wall_sprites:
                 if pygame.sprite.collide_mask(self, event):
                     self.rect.x -= x
                     self.rect.y -= y
                     run = False
-            for nps in nps_sprites:
+            for nps in base.nps_sprites:
                 if pygame.sprite.collide_mask(self, nps):
                     self.rect.x -= x
                     self.rect.y -= y
                     run = False
                     nps.player = True
-            for event in door_sprites:
+            for event in base.door_sprites:
                 event.player = False
                 if pygame.sprite.collide_mask(self, event):
                     self.rect.x -= x
@@ -259,45 +259,45 @@ class Player(pygame.sprite.Sprite):
                     event.player = True
                     event.x = self.rect.x + 15
                     event.y = self.rect.y - 13
-            for event in red_fountain:
+            for event in base.red_fountain:
                 event.player = False
                 if pygame.sprite.collide_mask(self, event):
                     self.rect.x -= x
                     self.rect.y -= y
                     run = False
-                    for nps in nps_sprites:
+                    for nps in base.nps_sprites:
                         if nps.fountain or base.time_level:
                             if not self.gun is None:
                                 event.player = True
                                 event.x = self.rect.x + 15
                                 event.y = self.rect.y - 13
-            for event in blue_fountain:
+            for event in base.blue_fountain:
                 event.player = False
                 if pygame.sprite.collide_mask(self, event):
                     self.rect.x -= x
                     self.rect.y -= y
                     run = False
-                    for nps in nps_sprites:
+                    for nps in base.nps_sprites:
                         if nps.fountain or base.boss_level:
                             if not self.gun is None:
                                 event.player = True
                                 event.x = self.rect.x + 15
                                 event.y = self.rect.y - 13
-            for event in spikes_sprites:
+            for event in base.spikes_sprites:
                 if pygame.sprite.collide_mask(self, event):
                     if event.frame == "floor_spikes_anim_f2.png" or event.frame == "floor_spikes_anim_f3.png":
                         self.hp -= 1
-            for event in decor_sprites:
+            for event in base.decor_sprites:
                 if pygame.sprite.collide_mask(self, event):
                     self.rect.x -= x
                     self.rect.y -= y
                     run = False
-            for event in wall_sprites:
+            for event in base.wall_sprites:
                 if pygame.sprite.collide_mask(self, event):
                     self.rect.x -= x
                     self.rect.y -= y
                     run = False
-            for event in chest_sprites:
+            for event in base.chest_sprites:
                 event.player = False
                 if pygame.sprite.collide_mask(self, event):
                     self.rect.x -= x
@@ -307,7 +307,7 @@ class Player(pygame.sprite.Sprite):
                         event.player = True
                         event.x = self.rect.x + 15
                         event.y = self.rect.y - 13
-            for event in spikes_sprites:
+            for event in base.spikes_sprites:
                 if pygame.sprite.collide_mask(self, event):
                     if event.frame == "floor_spikes_anim_f2.png" or event.frame == "floor_spikes_anim_f3.png":
                         self.hp -= 1
@@ -331,7 +331,7 @@ class Player(pygame.sprite.Sprite):
 
 class Knife(pygame.sprite.Sprite):
     def __init__(self, x, y):
-        super(Knife, self).__init__(all_sprites, gun_sprtites)
+        super(Knife, self).__init__(base.all_sprites, base.gun_sprtites)
         self.image = pygame.transform.scale(load_image("weapon_regular_sword.png"), (30, 65))
         self.rect = self.image.get_rect().move(x * tile_width, y * tile_height + 30)
         self.mask = pygame.mask.from_surface(self.image)
@@ -341,7 +341,7 @@ class Knife(pygame.sprite.Sprite):
     def attack(self):
         run = True
         while run:
-            for event in boss_sprites:
+            for event in base.boss_sprites:
                 if player.rect.x + player.rect.w + 32 >= event.rect.x:
                     event.hp -= self.damage
             run = False
@@ -353,7 +353,7 @@ class Knife(pygame.sprite.Sprite):
 
 class Nps(pygame.sprite.Sprite):
     def __init__(self):
-        super(Nps, self).__init__(all_sprites, nps_sprites)
+        super(Nps, self).__init__(base.all_sprites, base.nps_sprites)
         self.image = pygame.transform.scale(load_image("wizzard_m_idle_anim_f0.png"), (50, 100))
         self.rect = self.image.get_rect().move(12 * tile_width, 10 * tile_height + 30)
         self.list_task = ["Приветствую тебя в подземелье", "Для начала возьми оружие из сундука",
@@ -403,7 +403,7 @@ class Nps(pygame.sprite.Sprite):
 
 class Spikes(pygame.sprite.Sprite):
     def __init__(self, x, y):
-        super(Spikes, self).__init__(all_sprites, tile_sprites, spikes_sprites)
+        super(Spikes, self).__init__(base.all_sprites, base.tile_sprites, base.spikes_sprites)
         self.image = pygame.transform.scale(load_image("floor_spikes_anim_f0.png"), (50, 50))
         self.rect = self.image.get_rect().move(x * tile_width, y * tile_height + 30)
         self.frames = ["floor_spikes_anim_f0.png", "floor_spikes_anim_f1.png", "floor_spikes_anim_f2.png",
@@ -435,7 +435,7 @@ class Spikes(pygame.sprite.Sprite):
 
 class Hp(pygame.sprite.Sprite):
     def __init__(self, x, y, type):
-        super(Hp, self).__init__(all_sprites, hp_sprites)
+        super(Hp, self).__init__(base.all_sprites, base.hp_sprites)
         if type == 1:
             self.image = pygame.transform.scale(load_image("ui_heart_full.png"), (30, 30))
         elif type == 2:
@@ -449,7 +449,7 @@ class FireBall(pygame.sprite.Sprite):
     fire = load_image('Fire-Ball-1.png', -1)
 
     def __init__(self, x, y):
-        super(FireBall, self).__init__(all_sprites, fireball_sprites)
+        super(FireBall, self).__init__(base.all_sprites, base.fireball_sprites)
         self.image = pygame.transform.scale(FireBall.fire, (60, 60))
         self.rect = self.image.get_rect().move(x, y)
         self.frames = ['Fire-Ball-1.png', 'Fire-Ball-2.png', 'Fire-Ball-3.png', 'Fire-Ball-4.png']
@@ -464,11 +464,11 @@ class FireBall(pygame.sprite.Sprite):
         self.rect.x += x
         run = True
         while run:
-            for event in wall_sprites:
+            for event in base.wall_sprites:
                 if pygame.sprite.collide_mask(self, event):
                     self.kill()
                     break
-            for event in player_sprites:
+            for event in base.player_sprites:
                 if pygame.sprite.collide_mask(self, event):
                     event.hp -= 2.5
                     self.kill()
@@ -480,7 +480,7 @@ class Boss(pygame.sprite.Sprite):
     boss = "big_demon_idle_anim_f0.png"
 
     def __init__(self, x, y):
-        super(Boss, self).__init__(all_sprites, boss_sprites)
+        super(Boss, self).__init__(base.all_sprites, base.boss_sprites)
         self.see = "l"
         self.image = pygame.transform.flip(
             pygame.transform.scale(load_image(Boss.boss), (115, 150)),
@@ -504,7 +504,7 @@ class Boss(pygame.sprite.Sprite):
             self.rect.y += self.speed
         run = True
         while run:
-            for event in wall_sprites:
+            for event in base.wall_sprites:
                 if pygame.sprite.collide_mask(self, event):
                     self.rect.y = y
             run = False
@@ -523,6 +523,7 @@ class Boss(pygame.sprite.Sprite):
 
 
 def ending():
+    clock = pygame.time.Clock()
     intro_text = ["GAME OVER", "",
                   f"У вас {player.hp * 1.9} очков",
                   "Для завершения нажмите пробел"]
@@ -598,6 +599,7 @@ def terminate():
 
 
 def main():
+    clock = pygame.time.Clock()
     running = True
     fire = 0
     time = 0
@@ -647,33 +649,33 @@ def main():
                                 gun.update(player.rect.x - 20 - 10 * i, player.rect.y + 5)
                                 gun.image = pygame.transform.rotate(gun.image, 10)
                         screen.fill('black')
-                        tile_sprites.draw(screen)
-                        wall_sprites.draw(screen)
-                        decor_sprites.draw(screen)
-                        door_sprites.draw(screen)
-                        chest_sprites.draw(screen)
-                        blue_fountain.draw(screen)
-                        red_fountain.draw(screen)
-                        column_sprites.draw(screen)
-                        gun_sprtites.draw(screen)
-                        player_sprites.draw(screen)
-                        column_up_sprites.draw(screen)
-                        nps_sprites.draw(screen)
-                        hp_sprites.draw(screen)
-                        boss_sprites.draw(screen)
+                        base.tile_sprites.draw(screen)
+                        base.wall_sprites.draw(screen)
+                        base.decor_sprites.draw(screen)
+                        base.door_sprites.draw(screen)
+                        base.chest_sprites.draw(screen)
+                        base.blue_fountain.draw(screen)
+                        base.red_fountain.draw(screen)
+                        base.column_sprites.draw(screen)
+                        base.gun_sprtites.draw(screen)
+                        base.player_sprites.draw(screen)
+                        base.column_up_sprites.draw(screen)
+                        base.nps_sprites.draw(screen)
+                        base.hp_sprites.draw(screen)
+                        base.boss_sprites.draw(screen)
                         if level_2:
                             boss.update()
                             boss.anim()
                             boss.attack()
-                            for j in fireball_sprites:
+                            for j in base.fireball_sprites:
                                 j.update(-5)
-                        fireball_sprites.draw(screen)
+                        base.fireball_sprites.draw(screen)
                         if i == 28:
                             gun.attack()
                         pygame.display.flip()
-                        for i in blue_fountain:
+                        for i in base.blue_fountain:
                             i.update()
-                        for i in red_fountain:
+                        for i in base.red_fountain:
                             i.update()
                         clock.tick(FPS)
                     gun.image = image
@@ -687,12 +689,12 @@ def main():
                 if event.key == pygame.K_DOWN:
                     dic["down"] = True
                 if event.key == pygame.K_f:
-                    for door in door_sprites:
+                    for door in base.door_sprites:
                         if door.player:
                             ending()
                 if event.key == pygame.K_e:
-                    for nps in nps_sprites:
-                        for i in chest_sprites:
+                    for nps in base.nps_sprites:
+                        for i in base.chest_sprites:
                             if nps.gun:
                                 if not base.boss_level and not base.time_level:
                                     if not i.open:
@@ -710,14 +712,14 @@ def main():
                                             gun = Knife(i.rect.x // tile_width + 0.2, i.rect.y // tile_height - 1.5)
                                             player.gun = gun
                                             for _ in range(70):
-                                                gun_sprtites.draw(screen)
-                                                chest_sprites.draw(screen)
-                                                for i in blue_fountain:
+                                                base.gun_sprtites.draw(screen)
+                                                base.chest_sprites.draw(screen)
+                                                for i in base.blue_fountain:
                                                     i.update()
-                                                for i in red_fountain:
+                                                for i in base.red_fountain:
                                                     i.update()
-                                                red_fountain.draw(screen)
-                                                blue_fountain.draw(screen)
+                                                base.red_fountain.draw(screen)
+                                                base.blue_fountain.draw(screen)
                                                 clock.tick(FPS)
                                                 pygame.display.flip()
                         if not base.boss_level and not base.time_level:
@@ -731,34 +733,34 @@ def main():
                                 if nps.number == 6:
                                     start = True
                                 screen.fill('black')
-                                tile_sprites.draw(screen)
-                                wall_sprites.draw(screen)
-                                gun_sprtites.draw(screen)
-                                player_sprites.draw(screen)
-                                decor_sprites.draw(screen)
-                                chest_sprites.draw(screen)
-                                door_sprites.draw(screen)
-                                column_sprites.draw(screen)
-                                red_fountain.draw(screen)
-                                blue_fountain.draw(screen)
-                                nps_sprites.draw(screen)
-                                hp_sprites.draw(screen)
-                                column_up_sprites.draw(screen)
+                                base.tile_sprites.draw(screen)
+                                base.wall_sprites.draw(screen)
+                                base.gun_sprtites.draw(screen)
+                                base.player_sprites.draw(screen)
+                                base.decor_sprites.draw(screen)
+                                base.chest_sprites.draw(screen)
+                                base.door_sprites.draw(screen)
+                                base.column_sprites.draw(screen)
+                                base.red_fountain.draw(screen)
+                                base.blue_fountain.draw(screen)
+                                base.nps_sprites.draw(screen)
+                                base.hp_sprites.draw(screen)
+                                base.column_up_sprites.draw(screen)
                                 nps.update()
                                 for i in range(70):
-                                    for i in blue_fountain:
+                                    for i in base.blue_fountain:
                                         i.update()
-                                    for i in red_fountain:
+                                    for i in base.red_fountain:
                                         i.update()
-                                    red_fountain.draw(screen)
-                                    blue_fountain.draw(screen)
+                                    base.red_fountain.draw(screen)
+                                    base.blue_fountain.draw(screen)
                                     clock.tick(FPS)
                                     pygame.display.flip()
                         if nps.fountain or base.time_level or base.boss_level:
                             if not base.boss_level:
-                                for i in red_fountain:
+                                for i in base.red_fountain:
                                     if i.player:
-                                        for ii in all_sprites:
+                                        for ii in base.all_sprites:
                                             ii.kill()
                                         del nps
                                         generate_level(load_level("level_2.txt"))
@@ -771,10 +773,10 @@ def main():
                                         level_2 = True
                                         level_3 = False
                             if not base.time_level:
-                                for i in blue_fountain:
+                                for i in base.blue_fountain:
                                     if i.player:
-                                        for ii in all_sprites:
-                                            if ii not in list(player_sprites):
+                                        for ii in base.all_sprites:
+                                            if ii not in list(base.player_sprites):
                                                 ii.kill()
                                         del nps
                                         generate_level(load_level("level_3.txt"))
@@ -830,7 +832,7 @@ def main():
             boss.update()
             boss.anim()
             boss.attack()
-            for event in fireball_sprites:
+            for event in base.fireball_sprites:
                 event.update(-5)
         if level_3:
             fire += 0.2
@@ -838,20 +840,20 @@ def main():
                 FireBall(28 * tile_width, random.randint(1, 15) * tile_height + 30)
                 fire += 0.2
                 time += 1
-            for i in fireball_sprites:
+            for i in base.fireball_sprites:
                 i.update(-5)
         screen.fill('black')
-        tile_sprites.draw(screen)
-        wall_sprites.draw(screen)
-        decor_sprites.draw(screen)
-        door_sprites.draw(screen)
-        chest_sprites.draw(screen)
-        blue_fountain.draw(screen)
-        red_fountain.draw(screen)
-        column_sprites.draw(screen)
-        fireball_sprites.draw(screen)
+        base.tile_sprites.draw(screen)
+        base.wall_sprites.draw(screen)
+        base.decor_sprites.draw(screen)
+        base.door_sprites.draw(screen)
+        base.chest_sprites.draw(screen)
+        base.blue_fountain.draw(screen)
+        base.red_fountain.draw(screen)
+        base.column_sprites.draw(screen)
+        base.fireball_sprites.draw(screen)
         if level_2:
-            boss_sprites.draw(screen)
+            base.boss_sprites.draw(screen)
             if boss.figth:
                 start = 0
                 lis = ["big_demon_idle_anim_f0.png", "big_demon_idle_anim_f1.png", "big_demon_idle_anim_f2.png",
@@ -874,17 +876,17 @@ def main():
                 for _ in range(200):
                     if _ % 5 == 0 and _ != 0:
                         boss.anim()
-                    tile_sprites.draw(screen)
-                    wall_sprites.draw(screen)
+                    base.tile_sprites.draw(screen)
+                    base.wall_sprites.draw(screen)
                     if not player.gun is None:
                         if player.see == 'r':
                             gun.update(player.rect.x + 20, player.rect.y + 5)
                         elif player.see == 'l':
                             gun.update(player.rect.x, player.rect.y + 5)
-                    gun_sprtites.draw(screen)
-                    player_sprites.draw(screen)
-                    boss_sprites.draw(screen)
-                    hp_sprites.draw(screen)
+                    base.gun_sprtites.draw(screen)
+                    base.player_sprites.draw(screen)
+                    base.boss_sprites.draw(screen)
+                    base.hp_sprites.draw(screen)
                     pygame.display.flip()
                     boss.figth = False
         if not player.gun is None:
@@ -892,39 +894,39 @@ def main():
                 gun.update(player.rect.x + 20, player.rect.y + 5)
             elif player.see == 'l':
                 gun.update(player.rect.x, player.rect.y + 5)
-            gun_sprtites.draw(screen)
-        player_sprites.draw(screen)
-        column_up_sprites.draw(screen)
-        nps_sprites.draw(screen)
-        hp_sprites.draw(screen)
+            base.gun_sprtites.draw(screen)
+        base.player_sprites.draw(screen)
+        base.column_up_sprites.draw(screen)
+        base.nps_sprites.draw(screen)
+        base.hp_sprites.draw(screen)
         player.time += 1
         if player.time % 100 == 0:
             player.damage = False
-        for i in blue_fountain:
+        for i in base.blue_fountain:
             i.update()
             i.anim_player()
-        for i in red_fountain:
+        for i in base.red_fountain:
             i.update()
             i.anim_player()
-        for i in blue_fountain_floor:
+        for i in base.blue_fountain_floor:
             i.update()
-        for i in red_fountain_floor:
+        for i in base.red_fountain_floor:
             i.update()
-        for i in chest_sprites:
+        for i in base.chest_sprites:
             i.update()
-        for i in spikes_sprites:
+        for i in base.spikes_sprites:
             i.update()
         num = player.hp
-        for nps in nps_sprites:
+        for nps in base.nps_sprites:
             nps.anim_player()
-        for event in spikes_sprites:
+        for event in base.spikes_sprites:
             event.player()
-        for event in door_sprites:
+        for event in base.door_sprites:
             event.anim_player()
         pygame.display.flip()
         if level_2:
             if boss.hp <= 60.0:
-                for i in all_sprites:
+                for i in base.all_sprites:
                     i.kill()
                 level_2 = False
                 level_3 = False
@@ -942,7 +944,7 @@ def main():
                     gun.update(player.rect.x, player.rect.y + 5)
         if level_3:
             if time == 40:
-                for i in all_sprites:
+                for i in base.all_sprites:
                     i.kill()
                 level_2 = False
                 level_3 = False
@@ -960,7 +962,7 @@ def main():
                     gun.update(player.rect.x, player.rect.y + 5)
         if base.time_level and base.boss_level:
             if level_1:
-                for i in all_sprites:
+                for i in base.all_sprites:
                     i.kill()
                 level_2 = False
                 level_3 = False
@@ -982,6 +984,7 @@ def main():
 
 
 def start_window():
+    clock = pygame.time.Clock()
     intro_text = ["DUNGEON", "",
                   "Соревнуйся, сражайся, побеждай",
                   "Нажмите ПРОБЕЛ чтобы начать игру"]
@@ -1031,31 +1034,29 @@ class Base:
     def __init__(self):
         self.boss_level = False
         self.time_level = False
+        self.all_sprites = pygame.sprite.Group()
+        self.tile_sprites = pygame.sprite.Group()
+        self.door_sprites = pygame.sprite.Group()
+        self.wall_sprites = pygame.sprite.Group()
+        self.decor_sprites = pygame.sprite.Group()
+        self.player_sprites = pygame.sprite.Group()
+        self.column_sprites = pygame.sprite.Group()
+        self.blue_fountain = pygame.sprite.Group()
+        self.red_fountain = pygame.sprite.Group()
+        self.blue_fountain_floor = pygame.sprite.Group()
+        self.red_fountain_floor = pygame.sprite.Group()
+        self.chest_sprites = pygame.sprite.Group()
+        self.gun_sprtites = pygame.sprite.Group()
+        self.nps_sprites = pygame.sprite.Group()
+        self.spikes_sprites = pygame.sprite.Group()
+        self.hp_sprites = pygame.sprite.Group()
+        self.column_up_sprites = pygame.sprite.Group()
+        self.boss_sprites = pygame.sprite.Group()
+        self.fireball_sprites = pygame.sprite.Group()
 
-
-clock = pygame.time.Clock()
-all_sprites = pygame.sprite.Group()
-tile_sprites = pygame.sprite.Group()
-door_sprites = pygame.sprite.Group()
-wall_sprites = pygame.sprite.Group()
-decor_sprites = pygame.sprite.Group()
-player_sprites = pygame.sprite.Group()
-column_sprites = pygame.sprite.Group()
-blue_fountain = pygame.sprite.Group()
-red_fountain = pygame.sprite.Group()
-blue_fountain_floor = pygame.sprite.Group()
-red_fountain_floor = pygame.sprite.Group()
-chest_sprites = pygame.sprite.Group()
-gun_sprtites = pygame.sprite.Group()
-nps_sprites = pygame.sprite.Group()
-spikes_sprites = pygame.sprite.Group()
-hp_sprites = pygame.sprite.Group()
-column_up_sprites = pygame.sprite.Group()
-boss_sprites = pygame.sprite.Group()
-fireball_sprites = pygame.sprite.Group()
+base = Base()
 nps = Nps()
 player = Player()
-base = Base()
 generate_level(load_level('level.txt'))
 generate_level(load_level('decor_level.txt'))
 dic = {"right": False, "left": False, "top": False, "down": False}
